@@ -38,43 +38,65 @@ export default function ProductForm() {
     }
     
   return (
-    <div>
-      <form onSubmit={ handleSubmit }>
-        <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Nombre</label>
-            <input 
-            value={product.nombre}
-            type="text" 
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={ (e) => setProduct({...product, nombre: e.target.value}) }
-            />
-        </div>
-        <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Precio</label>
-            <input 
-            value={product.precio}
-            type="number" 
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={ (e) => setProduct({...product, precio: parseFloat(e.target.value)}) }
-            />
-        </div>
-        <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
-            <textarea 
-            value={product.descripcion}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            onChange={ (e) => setProduct({...product, descripcion: e.target.value}) }
-            ></textarea>
-        </div>
-        <div>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-            Guardar Producto
-            </button>
-            <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2" type="button">
-            Cancelar
-            </button>
-        </div>
-      </form>
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 border border-gray-200">
+        <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-sky-800 to-sky-600 bg-clip-text text-transparent">
+          {params.id ? 'Editar Producto' : 'Nuevo Producto'}
+        </h2>
+        <form onSubmit={ handleSubmit }>
+          <div className="mb-5">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Nombre</label>
+              <input 
+              value={product.nombre}
+              type="text" 
+              placeholder="Nombre del producto"
+              className="shadow-sm border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition duration-300"
+              onChange={ (e) => setProduct({...product, nombre: e.target.value}) }
+              />
+          </div>
+          <div className="mb-5">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Precio</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span className="text-gray-500">$</span>
+                </div>
+                <input 
+                value={product.precio}
+                type="number" 
+                step="0.01"
+                placeholder="0.00"
+                className="shadow-sm border border-gray-300 rounded-lg w-full py-3 pl-8 pr-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition duration-300"
+                onChange={ (e) => setProduct({...product, precio: parseFloat(e.target.value)}) }
+                />
+              </div>
+          </div>
+          <div className="mb-6">
+              <label className="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
+              <textarea 
+              value={product.descripcion}
+              rows="4"
+              placeholder="Descripción detallada del producto"
+              className="shadow-sm border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition duration-300"
+              onChange={ (e) => setProduct({...product, descripcion: e.target.value}) }
+              ></textarea>
+          </div>
+          <div className="flex justify-end space-x-3">
+              <button 
+                className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2.5 px-5 rounded-lg shadow-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50" 
+                type="button"
+                onClick={() => navigate('/')}
+              >
+                Cancelar
+              </button>
+              <button 
+                className="bg-sky-600 hover:bg-sky-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50" 
+                type="submit"
+              >
+                {params.id ? 'Actualizar' : 'Guardar'} Producto
+              </button>
+          </div>
+        </form>
+      </div>
     </div>
   )
 }
