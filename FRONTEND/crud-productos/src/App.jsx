@@ -1,15 +1,19 @@
 import { Toaster } from "react-hot-toast"
 import { BrowserRouter, Route, Routes } from "react-router"
+import { ThemeProvider } from '@mui/material/styles'
+import { CssBaseline, Box } from '@mui/material'
 import ProductList from "./components/ProductList"
 import ProductForm from "./components/ProductForm"
 import Header from "./components/Header"
+import theme from "./theme"
 
 function App() {
 
   return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-gray-50">
-        <div className="container mx-auto">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Box sx={{ minHeight: '100vh', bgcolor: 'grey.50' }}>
           <Header />
           <Routes>
             <Route path="/" element={<ProductList/>} />
@@ -41,9 +45,9 @@ function App() {
               },
             }}
           />
-        </div>
-      </div>
-    </BrowserRouter>
+        </Box>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

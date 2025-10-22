@@ -2,11 +2,9 @@ from django.db import models
 
 # Create your models here.
 class Producto(models.Model):
-    nombre = models.CharField(max_length=100)
-    precio = models.FloatField()
+    codigo = models.CharField(max_length=50, unique=True)
     descripcion = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    precio = models.FloatField()
 
     def __str__(self):
-        return self.nombre
+        return f"{self.codigo} - {self.descripcion[:30]}"

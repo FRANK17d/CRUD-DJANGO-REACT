@@ -2,13 +2,25 @@ import { useEffect, useState } from "react"
 import { createProduct, getProduct, updateProduct } from "../api/products";
 import { useNavigate, useParams } from "react-router";
 import toast from "react-hot-toast";
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  Container,
+  Grid,
+  InputAdornment
+} from '@mui/material';
+import { Save, Cancel } from '@mui/icons-material';
 
 export default function ProductForm() {
 
     const [product, setProduct] = useState({
-        nombre: '',
-        precio: 0,
-        descripcion: ''
+        codigo: '',
+        descripcion: '',
+        precio: 0
     });
 
 
@@ -27,76 +39,118 @@ export default function ProductForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (params.id) {
-            await updateProduct(params.id, product)
-            toast.success('Producto modificado con éxito')
-        } else {
-            await createProduct(product)
-            toast.success('Producto creado con éxito')
+        try {
+            if (params.id) {
+                await updateProduct(params.id, product)
+                toast.success('Producto modificado con éxito')
+            } else {
+                await createProduct(product)
+                toast.success('Producto creado con éxito')
+            }
+            navigate('/')
+        } catch (error) {
+            toast.error('Error al guardar el producto')
         }
-        navigate('/')
     }
     
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="bg-white rounded-xl shadow-md overflow-hidden p-6 border border-gray-200">
-        <h2 className="text-2xl font-bold mb-6 bg-gradient-to-r from-sky-800 to-sky-600 bg-clip-text text-transparent">
-          {params.id ? 'Editar Producto' : 'Nuevo Producto'}
-        </h2>
-        <form onSubmit={ handleSubmit }>
-          <div className="mb-5">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Nombre</label>
-              <input 
-              value={product.nombre}
-              type="text" 
-              placeholder="Nombre del producto"
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition duration-300"
-              onChange={ (e) => setProduct({...product, nombre: e.target.value}) }
-              />
-          </div>
-          <div className="mb-5">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Precio</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <span className="text-gray-500">$</span>
-                </div>
-                <input 
-                value={product.precio}
-                type="number" 
-                step="0.01"
-                placeholder="0.00"
-                className="shadow-sm border border-gray-300 rounded-lg w-full py-3 pl-8 pr-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition duration-300"
-                onChange={ (e) => setProduct({...product, precio: parseFloat(e.target.value)}) }
+    <Container maxWidth="md" sx={{ py: 4 }}>
+      <Card sx={{ boxShadow: 3 }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography 
+            variant="h4" 
+            gutterBottom
+            sx={{ 
+              fontWeight: 'bold',
+              mb: 4,
+              background: 'linear-gradient(45deg, #0ea5e9, #0284c7)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            {params.id ? 'Editar Producto' : 'Nuevo Producto'}
+          </Typography>
+          
+          <Box component="form" onSubmit={handleSubmit}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Código del Producto"
+                  placeholder="Ingresa el código del producto"
+                  value={product.codigo}
+                  onChange={(e) => setProduct({...product, codigo: e.target.value})}
+                  required
+                  variant="outlined"
                 />
-              </div>
-          </div>
-          <div className="mb-6">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
-              <textarea 
-              value={product.descripcion}
-              rows="4"
-              placeholder="Descripción detallada del producto"
-              className="shadow-sm border border-gray-300 rounded-lg w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition duration-300"
-              onChange={ (e) => setProduct({...product, descripcion: e.target.value}) }
-              ></textarea>
-          </div>
-          <div className="flex justify-end space-x-3">
-              <button 
-                className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2.5 px-5 rounded-lg shadow-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50" 
-                type="button"
-                onClick={() => navigate('/')}
-              >
-                Cancelar
-              </button>
-              <button 
-                className="bg-sky-600 hover:bg-sky-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-sm transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-opacity-50" 
-                type="submit"
-              >
-                {params.id ? 'Actualizar' : 'Guardar'} Producto
-              </button>
-          </div>
-        </form>
-      </div>
-    </div>
+              </Grid>
+              
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Descripción"
+                  placeholder="Descripción detallada del producto"
+                  value={product.descripcion}
+                  onChange={(e) => setProduct({...product, descripcion: e.target.value})}
+                  multiline
+                  rows={4}
+                  required
+                  variant="outlined"
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="Precio"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={product.precio}
+                  onChange={(e) => setProduct({...product, precio: parseFloat(e.target.value) || 0})}
+                  required
+                  variant="outlined"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Typography variant="body1" color="text.secondary">
+                          S/
+                        </Typography>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+              
+              <Grid item xs={12}>
+                <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 2 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Cancel />}
+                    onClick={() => navigate('/')}
+                    size="large"
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    variant="contained"
+                    startIcon={<Save />}
+                    type="submit"
+                    size="large"
+                    sx={{ 
+                      bgcolor: 'primary.main',
+                      '&:hover': { bgcolor: 'primary.dark' }
+                    }}
+                  >
+                    {params.id ? 'Actualizar' : 'Guardar'} Producto
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </CardContent>
+      </Card>
+    </Container>
   )
 }
